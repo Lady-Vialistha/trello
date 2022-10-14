@@ -1,73 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import { Draggable, Droppable, DragDropContext } from "react-beautiful-dnd";
-import { v4 as uuidv4 } from "uuid";
 
-function Board() {
-  const itemsFromBackend = [
-    { id: uuidv4(), content: "First task" },
-    { id: uuidv4(), content: "second task" },
-  ];
-  const columnsFromBackend = {
-    [uuidv4()]: {
-      name: "Open Progress",
-      items: itemsFromBackend,
-    },
-    [uuidv4()]: {
-      name: "In Progress",
-      items: [],
-    },
-    [uuidv4()]: {
-      name: "Done Progress",
-      items: [],
-    },
-  };
-  const [isColumn, setColumn] = useState(columnsFromBackend);
-
-  function handleOnDragEnd(res, col, setCol) {
-    if (!res.destination) return;
-    const { source, destination } = res;
-
-    if (source.droppableId !== destination.droppableId) {
-      const sourceColumn = col[source.droppableId];
-      const destinationColumn = col[destination.droppableId];
-      const sourceItems = [...sourceColumn.items];
-      const destinationItems = [...destinationColumn.items];
-      const [removed] = sourceItems.splice(source.index, 1);
-      destinationItems.splice(destination.index, 0, removed);
-      setCol({
-        ...col,
-        [source.droppableId]: {
-          ...sourceColumn,
-          items: sourceItems,
-        },
-        [destination.droppableId]: {
-          ...destinationColumn,
-          items: destinationItems,
-        },
-      });
-    } else {
-      const column = col[source.droppableId];
-      const copiedItems = [...column.items];
-      const [removed] = copiedItems.splice(source.index, 1);
-      copiedItems.splice(destination.index, 0, removed);
-
-      setCol({
-        ...col,
-        [source.droppableId]: {
-          ...col,
-          items: copiedItems,
-        },
-      });
-    }
-  }
+function Board({ column, setColumn = () => {}, handleOnDragEnd = () => {} }) {
   return (
     <div className="d-flex justify-content-evenly">
-      {isColumn.length !== 0 ? (
+      {column.length !== 0 ? (
         <DragDropContext
-          onDragEnd={(res) => handleOnDragEnd(res, isColumn, setColumn)}
+          onDragEnd={(res) => handleOnDragEnd(res, column, setColumn)}
         >
-          {Object.entries(isColumn).map(([id, col]) => {
-            console.log("iscolumn", isColumn);
+          {Object.entries(column).map(([id, col]) => {
+            console.log("iscolumn", column);
             return (
               <div key={id}>
                 <h5>{col.name}</h5>
@@ -79,7 +21,7 @@ function Board() {
                         ref={provided.innerRef}
                         style={{
                           backgroundColor: snapshot.isDraggingOver
-                            ? "#0dcaf0y"
+                            ? "rgb(141, 156, 179)"
                             : "#0dcaf059",
                         }}
                         className="box"

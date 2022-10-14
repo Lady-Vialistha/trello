@@ -1,22 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Container, Button, Input } from "reactstrap";
 import "../App.css";
 
-function ToDoList() {
-  const [isToDo, setToDo] = useState([]);
-  const [isTask, setTask] = useState("");
+function ToDoList({ isTask, setTask = () => {}, handleButtonTask = () => {} }) {
+  // const [isToDo, setToDo] = useState([]);
+  // const [isTask, setTask] = useState("");
 
-  function handleButtonTask() {
-    setToDo([...isToDo, isTask]);
-  }
-
-  const printTask = isToDo.map((item, key) => {
-    return (
-      <ul key={key}>
-        <li>{item}</li>
-      </ul>
-    );
-  });
+  // function handleButtonTask() {
+  //   setToDo([...isToDo, isTask]);
+  // }
 
   return (
     <Container>
@@ -37,7 +29,6 @@ function ToDoList() {
           Submit
         </Button>
       </div>
-      {printTask}
     </Container>
   );
 }
