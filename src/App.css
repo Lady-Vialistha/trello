@@ -67,11 +67,14 @@
     height: 40rem;
     border-radius: 33px;
     padding: 1rem;
+    background-color: #0dcaf059;
 }
 
 .box-list {
     color: white;
     padding: 2rem;
     margin: 1rem;
+    width: 255px;
     border-radius: 18px;
+    background-color: #192131;
 }
