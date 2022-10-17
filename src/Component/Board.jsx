@@ -13,52 +13,54 @@ function Board({ column, setColumn = () => {}, handleOnDragEnd = () => {} }) {
             return (
               <div key={id}>
                 <h5>{col.name}</h5>
-                <Droppable droppableId={id}>
-                  {(provided, snapshot) => {
-                    return (
-                      <div
-                        {...provided.droppableProps}
-                        ref={provided.innerRef}
-                        style={{
-                          backgroundColor: snapshot.isDraggingOver
-                            ? "rgb(141, 156, 179)"
-                            : "#0dcaf059",
-                        }}
-                        className="box"
-                      >
-                        {col.items.map((item, index) => {
-                          return (
-                            <Draggable
-                              key={item.id}
-                              draggableId={item.id}
-                              index={index}
-                            >
-                              {(provided, snapshot) => {
-                                return (
-                                  <div
-                                    ref={provided.innerRef}
-                                    {...provided.draggableProps}
-                                    {...provided.dragHandleProps}
-                                    style={{
-                                      backgroundColor: snapshot.isDragging
-                                        ? "#0dcaf059"
-                                        : "#192131",
-                                      ...provided.draggableProps.style,
-                                    }}
-                                    className="box-list"
-                                  >
-                                    {item.content}
-                                  </div>
-                                );
-                              }}
-                            </Draggable>
-                          );
-                        })}
-                        {provided.placeholder}
-                      </div>
-                    );
-                  }}
-                </Droppable>
+                <div>
+                  <Droppable droppableId={id}>
+                    {(provided, snapshot) => {
+                      return (
+                        <div
+                          {...provided.droppableProps}
+                          ref={provided.innerRef}
+                          style={{
+                            backgroundColor: snapshot.isDraggingOver
+                              ? "rgb(141, 156, 179)"
+                              : "#0dcaf059",
+                          }}
+                          className="box"
+                        >
+                          {col.items.map((item, index) => {
+                            return (
+                              <Draggable
+                                key={item.id}
+                                draggableId={item.id}
+                                index={index}
+                              >
+                                {(provided, snapshot) => {
+                                  return (
+                                    <div
+                                      ref={provided.innerRef}
+                                      {...provided.draggableProps}
+                                      {...provided.dragHandleProps}
+                                      style={{
+                                        backgroundColor: snapshot.isDragging
+                                          ? "#0dcaf059"
+                                          : "#192131",
+                                        ...provided.draggableProps.style,
+                                      }}
+                                      className="box-list"
+                                    >
+                                      {item.content}
+                                    </div>
+                                  );
+                                }}
+                              </Draggable>
+                            );
+                          })}
+                          {provided.placeholder}
+                        </div>
+                      );
+                    }}
+                  </Droppable>
+                </div>
               </div>
             );
           })}
