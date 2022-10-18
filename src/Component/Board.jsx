@@ -9,7 +9,6 @@ function Board({ column, setColumn = () => {}, handleOnDragEnd = () => {} }) {
           onDragEnd={(res) => handleOnDragEnd(res, column, setColumn)}
         >
           {Object.entries(column).map(([id, col]) => {
-            console.log("iscolumn", column);
             return (
               <div key={id}>
                 <h5>{col.name}</h5>
