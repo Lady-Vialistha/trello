@@ -1,7 +1,12 @@
 import React from "react";
 import { Draggable, Droppable, DragDropContext } from "react-beautiful-dnd";
 
-function Board({ column, setColumn = () => {}, handleOnDragEnd = () => {} }) {
+function Board({
+  arr,
+  column,
+  setColumn = () => {},
+  handleOnDragEnd = () => {},
+}) {
   return (
     <div className="d-flex justify-content-evenly">
       {column.length !== 0 ? (
@@ -9,6 +14,7 @@ function Board({ column, setColumn = () => {}, handleOnDragEnd = () => {} }) {
           onDragEnd={(res) => handleOnDragEnd(res, column, setColumn)}
         >
           {Object.entries(column).map(([id, col]) => {
+            console.log(col, "colS");
             return (
               <div key={id}>
                 <h5>{col.name}</h5>

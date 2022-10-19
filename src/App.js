@@ -6,9 +6,9 @@ import Board from "./Component/Board";
 import { onSnapshot, collection, getDocs, addDoc } from "firebase/firestore";
 import db from "../src/Config/FirebaseConfig";
 function App() {
-  const [task, setTask] = useState("");
-
-  const itemsFromBackend = [{ id: uuidv4(), content: "example taskname" }];
+  const [taskname, setTaskName] = useState("");
+  const [arr, setArr] = useState([]);
+  const itemsFromBackend = [{ id: uuidv4(), content: "dfssdfdfdg" }];
   const columnsFromBackend = {
     open: {
       name: "Open Progress",
@@ -24,6 +24,7 @@ function App() {
     },
   };
   const [column, setColumn] = useState(columnsFromBackend);
+  console.log(column, "column");
   function handleButtonTask() {
     setColumn((prev) => {
       return {
@@ -33,23 +34,37 @@ function App() {
           items: [
             {
               id: uuidv4(),
-              content: task,
+              content: taskname,
             },
             ...prev.open.items,
           ],
         },
       };
     });
-    setTask("");
+    const docRef = collection(db, "TrelloList");
+    const getRef = getDocs(docRef);
+
+    if (getRef !== "") {
+      addDoc(collection(db, "TrelloList"), {
+        taskname: taskname,
+      })
+        .then(() => {
+          console.log("berhasil");
+        })
+        .catch((e) => {
+          console.log("gagal", e);
+        });
+    }
+    setTaskName("");
   }
 
   useEffect(() => {
     onSnapshot(collection(db, "TrelloList"), (snap) => {
-      const items = snap.docs.map((doc) => ({
+      const res = snap.docs.map((doc) => ({
         taskname: doc.taskname,
         ...doc.data(),
       }));
-      console.log("map", items);
+      return setArr(res);
     });
   }, []);
 
@@ -93,33 +108,23 @@ function App() {
     console.log("state column", column);
     console.log("res", res);
     console.log("col", col);
-
-    const getRef = getDocs(collection(db, "TrelloList"));
-    if (getRef !== "") {
-      addDoc(collection(db, "TrelloList"), {
-        taskname: col.taskname,
-      })
-        .then(() => {
-          console.log(col.taskname);
-        })
-        .catch((e) => {
-          alert("Failed added to Firebase");
-          console.log("Error failed", e);
-        });
-    }
   }
   return (
     <div className="App">
       <section>
         <ToDoList
           handleButtonTask={handleButtonTask}
-          setTask={setTask}
-          task={task}
+          setTaskName={setTaskName}
+          taskname={taskname}
         />
+        {arr.map((item, key) => {
+          return <div key={key}>{item.taskname}</div>;
+        })}
         <Board
           column={column}
           setColumn={setColumn}
           handleOnDragEnd={handleOnDragEnd}
+          arr={arr}
         />
       </section>
     </div>
