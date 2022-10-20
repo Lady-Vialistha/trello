@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Container, Button, Input } from "reactstrap";
 import "../App.css";
+import { CreateContext } from "../App";
 
-function ToDoList({
-  taskname,
-  setTaskName = () => {},
-  handleButtonTask = () => {},
-}) {
+function ToDoList() {
+  const taskname = useContext(CreateContext).taskname;
+  const setTaskName = useContext(CreateContext).setTaskName;
+  const handleButtonTask = useContext(CreateContext).handleButtonTask;
   return (
     <Container>
       <h1 className="text-white">Trello Task</h1>

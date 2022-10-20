@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext, createContext } from "react";
 import "./App.css";
 import ToDoList from "./Component/ToDoList";
 import { v4 as uuidv4 } from "uuid";
 import Board from "./Component/Board";
 import { onSnapshot, collection, getDocs, addDoc } from "firebase/firestore";
 import db from "../src/Config/FirebaseConfig";
-function App() {
+
+export const CreateContext = createContext();
+
+function App(props) {
   const [taskname, setTaskName] = useState("");
   const [arr, setArr] = useState([]);
   const itemsFromBackend = [{ id: uuidv4(), content: "dfssdfdfdg" }];
@@ -23,7 +26,9 @@ function App() {
       items: [],
     },
   };
+
   const [column, setColumn] = useState(columnsFromBackend);
+  console.log(column, "coilumn");
   console.log(column, "column");
   function handleButtonTask() {
     setColumn((prev) => {
@@ -112,21 +117,25 @@ function App() {
   return (
     <div className="App">
       <section>
-        <ToDoList
-          handleButtonTask={handleButtonTask}
-          setTaskName={setTaskName}
-          taskname={taskname}
-        />
-        {arr.map((item, key) => {
-          return <div key={key}>{item.taskname}</div>;
-        })}
-        <Board
-          column={column}
-          setColumn={setColumn}
-          handleOnDragEnd={handleOnDragEnd}
-          arr={arr}
-        />
+        <CreateContext.Provider
+          value={{
+            column: column,
+            handleButtonTask: handleButtonTask,
+            setTaskName: setTaskName,
+            taskname: taskname,
+            handleOnDragEnd: handleOnDragEnd,
+            setColumn: setColumn,
+          }}
+        >
+          <ToDoList />
+          <Board />
+        </CreateContext.Provider>
       </section>
+
+      <h1 className="m-5">get data firebase</h1>
+      {arr.map((item, key) => {
+        return <div key={key}>{item.taskname}</div>;
+      })}
     </div>
   );
 }

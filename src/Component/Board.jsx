@@ -1,12 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Draggable, Droppable, DragDropContext } from "react-beautiful-dnd";
+import { CreateContext } from "../App";
 
-function Board({
-  arr,
-  column,
-  setColumn = () => {},
-  handleOnDragEnd = () => {},
-}) {
+function Board() {
+  const column = useContext(CreateContext).column;
+  const setColumn = useContext(CreateContext).setColumn;
+  const handleOnDragEnd = useContext(CreateContext).handleOnDragEnd;
   return (
     <div className="d-flex justify-content-evenly">
       {column.length !== 0 ? (
