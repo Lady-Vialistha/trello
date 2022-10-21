@@ -3,19 +3,23 @@ import "./App.css";
 import ToDoList from "./Component/ToDoList";
 import { v4 as uuidv4 } from "uuid";
 import Board from "./Component/Board";
-import { onSnapshot, collection, getDocs, addDoc } from "firebase/firestore";
+import {
+  onSnapshot,
+  collection,
+  getDocs,
+  addDoc,
+  doc,
+} from "firebase/firestore";
 import db from "../src/Config/FirebaseConfig";
 
 export const CreateContext = createContext();
 
-function App(props) {
+function App() {
   const [taskname, setTaskName] = useState("");
-  const [arr, setArr] = useState([]);
-  const itemsFromBackend = [{ id: uuidv4(), content: "dfssdfdfdg" }];
   const columnsFromBackend = {
     open: {
       name: "Open Progress",
-      items: itemsFromBackend,
+      items: [],
     },
     inprogress: {
       name: "In Progress",
@@ -28,8 +32,8 @@ function App(props) {
   };
 
   const [column, setColumn] = useState(columnsFromBackend);
-  console.log(column, "coilumn");
   console.log(column, "column");
+
   function handleButtonTask() {
     setColumn((prev) => {
       return {
@@ -69,9 +73,20 @@ function App(props) {
         taskname: doc.taskname,
         ...doc.data(),
       }));
-      return setArr(res);
+      return res;
     });
   }, []);
+
+  useEffect(() => {
+    const cardItems = JSON.parse(localStorage.getItem("column"));
+    if (cardItems) {
+      setColumn(cardItems);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("column", JSON.stringify(column));
+  }, [column]);
 
   function handleOnDragEnd(res, col, setCol) {
     if (!res.destination) return;
@@ -133,9 +148,6 @@ function App(props) {
       </section>
 
       <h1 className="m-5">get data firebase</h1>
-      {arr.map((item, key) => {
-        return <div key={key}>{item.taskname}</div>;
-      })}
     </div>
   );
 }
