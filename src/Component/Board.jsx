@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useReducer } from "react";
 import { Draggable, Droppable, DragDropContext } from "react-beautiful-dnd";
 import { CreateContext } from "../App";
 
@@ -6,6 +6,9 @@ function Board() {
   const column = useContext(CreateContext).column;
   const setColumn = useContext(CreateContext).setColumn;
   const handleOnDragEnd = useContext(CreateContext).handleOnDragEnd;
+  const state = useContext(CreateContext).state;
+  const dispatch = useContext(CreateContext).dispatch;
+
   return (
     <div className="d-flex justify-content-evenly">
       {column.length !== 0 ? (
@@ -53,12 +56,24 @@ function Board() {
                                       className="box-list"
                                     >
                                       {item.content}
+
+                                      <button
+                                        onClick={() =>
+                                          dispatch({
+                                            type: "remove",
+                                            id: state.id,
+                                          })
+                                        }
+                                      >
+                                        delete
+                                      </button>
                                     </div>
                                   );
                                 }}
                               </Draggable>
                             );
                           })}
+
                           {provided.placeholder}
                         </div>
                       );

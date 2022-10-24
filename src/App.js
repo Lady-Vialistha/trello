@@ -1,19 +1,18 @@
-import React, { useState, useEffect, useContext, createContext } from "react";
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  createContext,
+  useReducer,
+} from "react";
 import "./App.css";
 import ToDoList from "./Component/ToDoList";
 import { v4 as uuidv4 } from "uuid";
 import Board from "./Component/Board";
-import {
-  onSnapshot,
-  collection,
-  getDocs,
-  addDoc,
-  doc,
-} from "firebase/firestore";
+import { onSnapshot, collection, getDocs, addDoc } from "firebase/firestore";
 import db from "../src/Config/FirebaseConfig";
 
 export const CreateContext = createContext();
-
 function App() {
   const [taskname, setTaskName] = useState("");
   const columnsFromBackend = {
@@ -58,7 +57,7 @@ function App() {
         taskname: taskname,
       })
         .then(() => {
-          console.log("berhasil");
+          console.log("berhasil ditambah ke firebase");
         })
         .catch((e) => {
           console.log("gagal", e);
@@ -91,7 +90,6 @@ function App() {
   function handleOnDragEnd(res, col, setCol) {
     if (!res.destination) return;
     const { source, destination } = res;
-    console.log("id", destination.droppableId);
 
     if (source.droppableId !== destination.droppableId) {
       const sourceColumn = col[source.droppableId];
@@ -129,6 +127,19 @@ function App() {
     console.log("res", res);
     console.log("col", col);
   }
+
+  function reducerFn(state, action) {
+    switch (action.type) {
+      case "remove":
+        const deleteItem = state.filter((item) => item.id !== action.id);
+        console.log("delete", deleteItem);
+        return deleteItem;
+      default:
+        throw new Error();
+    }
+  }
+
+  const [state, dispatch] = useReducer(reducerFn, []);
   return (
     <div className="App">
       <section>
@@ -140,14 +151,14 @@ function App() {
             taskname: taskname,
             handleOnDragEnd: handleOnDragEnd,
             setColumn: setColumn,
+            state: state,
+            dispatch: dispatch,
           }}
         >
           <ToDoList />
           <Board />
         </CreateContext.Provider>
       </section>
-
-      <h1 className="m-5">get data firebase</h1>
     </div>
   );
 }
