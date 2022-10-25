@@ -85,7 +85,31 @@ function App() {
 
   useEffect(() => {
     localStorage.setItem("column", JSON.stringify(column));
+    console.log("context changed");
   }, [column]);
+
+  function reducer(state, action) {
+    console.log("state", state);
+    console.log("action", action.payload.id);
+    switch (action.type) {
+      case "remove":
+        console.log(Object.entries(state), "state after switch");
+
+        // return state.filter(
+        //   (item) => item.id !== action.payload.id
+        // );
+        return state;
+    }
+  }
+
+  const [state, dispatch] = useReducer(reducer, column);
+
+  // function deleteTask(id) {
+  //   dispatch({
+  //     type: "remove",
+  //     id: { id },
+  //   });
+  // }
 
   function handleOnDragEnd(res, col, setCol) {
     if (!res.destination) return;
@@ -128,18 +152,6 @@ function App() {
     console.log("col", col);
   }
 
-  function reducerFn(state, action) {
-    switch (action.type) {
-      case "remove":
-        const deleteItem = state.filter((item) => item.id !== action.id);
-        console.log("delete", deleteItem);
-        return deleteItem;
-      default:
-        throw new Error();
-    }
-  }
-
-  const [state, dispatch] = useReducer(reducerFn, []);
   return (
     <div className="App">
       <section>
@@ -151,11 +163,12 @@ function App() {
             taskname: taskname,
             handleOnDragEnd: handleOnDragEnd,
             setColumn: setColumn,
-            state: state,
             dispatch: dispatch,
+            state: state,
           }}
         >
           <ToDoList />
+
           <Board />
         </CreateContext.Provider>
       </section>

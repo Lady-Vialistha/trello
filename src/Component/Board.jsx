@@ -6,8 +6,8 @@ function Board() {
   const column = useContext(CreateContext).column;
   const setColumn = useContext(CreateContext).setColumn;
   const handleOnDragEnd = useContext(CreateContext).handleOnDragEnd;
-  const state = useContext(CreateContext).state;
   const dispatch = useContext(CreateContext).dispatch;
+  const deleteTask = useContext(CreateContext).deleteTask;
 
   return (
     <div className="d-flex justify-content-evenly">
@@ -61,7 +61,7 @@ function Board() {
                                         onClick={() =>
                                           dispatch({
                                             type: "remove",
-                                            id: state.id,
+                                            payload: { id: item.id },
                                           })
                                         }
                                       >
